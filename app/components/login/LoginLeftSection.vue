@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import BaseIcon from '../BaseIcon.vue'
+
 const features = [
   {
     id: 'multi-channel',
@@ -19,14 +21,12 @@ const features = [
 </script>
 
 <template>
-  <section class="relative flex flex-1 items-center justify-center overflow-hidden bg-gray-950 p-8 lg:p-16">
-    <div class="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-transparent" />
-    <div class="absolute left-20 top-20 h-72 w-72 rounded-full bg-primary-500/5 blur-3xl" />
-    <div class="absolute bottom-20 right-20 h-96 w-96 rounded-full bg-primary-500/5 blur-3xl" />
+  <section class="relative flex flex-1 items-center justify-center overflow-hidden bg-background-dark p-8 lg:p-16">
+    <div class="absolute inset-0 border-r border-border-dark bg-background-dark" />
 
     <div class="relative z-10 max-w-xl">
       <div class="mb-8">
-        <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-400 to-primary-600 text-3xl font-bold text-white shadow-2xl">
+        <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-primary-500 text-3xl font-bold text-white shadow-soft">
           C
         </div>
       </div>
@@ -36,7 +36,7 @@ const features = [
         Multi Atendimento
       </h1>
 
-      <p class="mb-8 text-lg leading-relaxed text-gray-300 md:text-xl">
+      <p class="mb-8 text-lg leading-relaxed text-foreground-darkSecondary md:text-xl">
         Gerencie todas as suas conversas em um unico lugar. Atendimento eficiente e organizado para sua equipe.
       </p>
 
@@ -46,14 +46,14 @@ const features = [
           :key="feature.id"
           class="flex items-start gap-4"
         >
-          <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary-500/20 text-lg font-bold text-primary-400">
-            ✓
+          <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary-500/20 text-primary-400">
+            <BaseIcon name="check" />
           </div>
           <div>
             <h3 class="mb-1 text-lg font-semibold text-white">
               {{ feature.title }}
             </h3>
-            <p class="text-gray-400">
+            <p class="text-foreground-darkMuted">
               {{ feature.description }}
             </p>
           </div>

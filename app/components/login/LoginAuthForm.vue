@@ -83,22 +83,22 @@ async function handleRegister(): Promise<void> {
 </script>
 
 <template>
-  <section class="flex w-full items-center justify-center bg-white p-6 transition-colors dark:bg-gray-950 lg:w-[32rem] lg:p-10">
+  <section class="flex w-full items-center justify-center bg-surface p-6 transition-colors dark:bg-surface-dark lg:w-[32rem] lg:p-10">
     <div class="w-full max-w-md">
       <div class="mb-8 text-center">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+        <h2 class="text-2xl font-bold text-foreground-light dark:text-foreground-dark">
           {{ title }}
         </h2>
-        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p class="mt-2 text-sm text-foreground-lightSecondary dark:text-foreground-darkSecondary">
           {{ subtitle }}
         </p>
       </div>
 
-      <div class="mb-6 grid grid-cols-2 rounded-2xl bg-gray-100 p-1 dark:bg-gray-900">
+      <div class="mb-6 grid grid-cols-2 rounded-2xl bg-background-lightTertiary p-1 dark:bg-background-darkTertiary">
         <button
           :class="[
             'rounded-xl px-4 py-3 text-sm font-semibold transition-all',
-            activeTab === 'login' ? 'bg-white text-primary-600 shadow-soft dark:bg-gray-800 dark:text-primary-400' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200',
+            activeTab === 'login' ? 'bg-surface text-primary-600 shadow-soft dark:bg-surface-dark-raised dark:text-primary-400' : 'text-foreground-lightMuted hover:text-foreground-lightSecondary dark:text-foreground-darkMuted dark:hover:text-foreground-darkSecondary',
           ]"
           type="button"
           @click="setActiveTab('login')"
@@ -108,7 +108,7 @@ async function handleRegister(): Promise<void> {
         <button
           :class="[
             'rounded-xl px-4 py-3 text-sm font-semibold transition-all',
-            activeTab === 'register' ? 'bg-white text-primary-600 shadow-soft dark:bg-gray-800 dark:text-primary-400' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200',
+            activeTab === 'register' ? 'bg-surface text-primary-600 shadow-soft dark:bg-surface-dark-raised dark:text-primary-400' : 'text-foreground-lightMuted hover:text-foreground-lightSecondary dark:text-foreground-darkMuted dark:hover:text-foreground-darkSecondary',
           ]"
           type="button"
           @click="setActiveTab('register')"
@@ -125,7 +125,7 @@ async function handleRegister(): Promise<void> {
         <BaseInput
           id="login-email"
           v-model="loginEmail"
-          icon="@"
+          icon="mail"
           label="Email"
           placeholder="seu@email.com"
           type="email"
@@ -134,7 +134,7 @@ async function handleRegister(): Promise<void> {
         <BaseInput
           id="login-password"
           v-model="loginPassword"
-          icon="*"
+          icon="lock"
           label="Senha"
           placeholder="********"
           :right-padding="true"
@@ -142,7 +142,7 @@ async function handleRegister(): Promise<void> {
         >
           <template #right>
             <button
-              class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-foreground-lightMuted hover:text-foreground-lightSecondary dark:text-foreground-darkMuted dark:hover:text-foreground-darkSecondary"
               type="button"
               @click="showPassword = !showPassword"
             >
@@ -155,10 +155,10 @@ async function handleRegister(): Promise<void> {
           <label class="flex cursor-pointer items-center gap-2">
             <input
               v-model="rememberMe"
-              class="h-4 w-4 rounded border-gray-300 text-primary-500 focus:ring-primary-500 dark:border-gray-700 dark:bg-gray-900"
+              class="h-4 w-4 rounded border-border-strong bg-input text-primary-500 focus:ring-primary-500 dark:border-border-dark-strong dark:bg-input-dark"
               type="checkbox"
             >
-            <span class="text-sm text-gray-600 dark:text-gray-300">Lembrar-me</span>
+            <span class="text-sm text-foreground-lightSecondary dark:text-foreground-darkSecondary">Lembrar-me</span>
           </label>
           <NuxtLink
             class="text-sm font-semibold text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
@@ -198,14 +198,14 @@ async function handleRegister(): Promise<void> {
         <BaseInput
           id="register-name"
           v-model="registerName"
-          icon="U"
+          icon="user"
           label="Nome Completo"
           placeholder="Seu nome completo"
         />
         <BaseInput
           id="register-email"
           v-model="registerEmail"
-          icon="@"
+          icon="mail"
           label="Email"
           placeholder="seu@email.com"
           type="email"
@@ -213,7 +213,7 @@ async function handleRegister(): Promise<void> {
         <BaseInput
           id="register-phone"
           v-model="registerPhone"
-          icon="T"
+          icon="phone"
           label="Telefone"
           placeholder="+55 (11) 3333-3333"
           type="tel"
@@ -221,7 +221,7 @@ async function handleRegister(): Promise<void> {
         <BaseInput
           id="register-whatsapp"
           v-model="registerWhatsapp"
-          icon="W"
+          icon="message-circle"
           label="WhatsApp"
           placeholder="+55 (11) 99999-9999"
           type="tel"
@@ -229,7 +229,7 @@ async function handleRegister(): Promise<void> {
         <BaseInput
           id="register-password"
           v-model="registerPassword"
-          icon="*"
+          icon="lock"
           label="Senha"
           placeholder="********"
           :right-padding="true"
@@ -237,7 +237,7 @@ async function handleRegister(): Promise<void> {
         >
           <template #right>
             <button
-              class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-foreground-lightMuted hover:text-foreground-lightSecondary dark:text-foreground-darkMuted dark:hover:text-foreground-darkSecondary"
               type="button"
               @click="showPassword = !showPassword"
             >
@@ -248,7 +248,7 @@ async function handleRegister(): Promise<void> {
         <BaseInput
           id="register-confirm-password"
           v-model="registerConfirmPassword"
-          icon="*"
+          icon="lock"
           label="Confirmar Senha"
           placeholder="********"
           :right-padding="true"
@@ -256,7 +256,7 @@ async function handleRegister(): Promise<void> {
         >
           <template #right>
             <button
-              class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-foreground-lightMuted hover:text-foreground-lightSecondary dark:text-foreground-darkMuted dark:hover:text-foreground-darkSecondary"
               type="button"
               @click="showConfirmPassword = !showConfirmPassword"
             >
@@ -268,10 +268,10 @@ async function handleRegister(): Promise<void> {
         <label class="flex items-start gap-2">
           <input
             v-model="acceptedTerms"
-            class="mt-1 h-4 w-4 rounded border-gray-300 text-primary-500 focus:ring-primary-500 dark:border-gray-700 dark:bg-gray-900"
+            class="mt-1 h-4 w-4 rounded border-border-strong bg-input text-primary-500 focus:ring-primary-500 dark:border-border-dark-strong dark:bg-input-dark"
             type="checkbox"
           >
-          <span class="text-sm text-gray-600 dark:text-gray-300">
+          <span class="text-sm text-foreground-lightSecondary dark:text-foreground-darkSecondary">
             Eu aceito os
             <a class="font-semibold text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" href="#">Termos de Uso</a>
             e a

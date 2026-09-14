@@ -17,6 +17,10 @@ const { logout } = useAuth()
 const testEmail = ref('')
 const isLoggingOut = ref(false)
 
+definePageMeta({
+  layout: 'default',
+})
+
 const userName = computed(() => {
   const metadata = user.value?.user_metadata as { name?: string; full_name?: string } | undefined
 
@@ -55,7 +59,7 @@ async function handleLogout(): Promise<void> {
             <h2 class="mt-1 text-xl font-semibold">
               {{ userName }}
             </h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
+            <p class="text-sm text-foreground-lightSecondary dark:text-foreground-darkSecondary">
               {{ userEmail }}
             </p>
           </div>
@@ -86,7 +90,7 @@ async function handleLogout(): Promise<void> {
           <h2 class="text-xl font-semibold">
             Componentes base
           </h2>
-          <p class="text-sm text-gray-500 dark:text-gray-400">
+          <p class="text-sm text-foreground-lightSecondary dark:text-foreground-darkSecondary">
             BaseInput e BaseButton importados diretamente na pagina inicial.
           </p>
         </div>

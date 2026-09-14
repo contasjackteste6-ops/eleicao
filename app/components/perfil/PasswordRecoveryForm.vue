@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import BaseButton from '../BaseButton.vue'
+import BaseIcon from '../BaseIcon.vue'
 import BaseInput from '../BaseInput.vue'
 
 const password = ref('')
@@ -17,18 +18,18 @@ const requirements = [
 </script>
 
 <template>
-  <section class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
-    <div class="border-b border-gray-200 p-6 dark:border-gray-800">
+  <section class="rounded-2xl border border-border bg-surface shadow-soft dark:border-border-dark dark:bg-surface-dark">
+    <div class="border-b border-border p-6 dark:border-border-dark">
       <div class="flex items-center gap-3">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-danger-100 text-lg font-bold text-danger-600 dark:bg-danger-950 dark:text-danger-300">
-          !
+        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-danger-100 text-danger-600 dark:bg-danger-950 dark:text-danger-300">
+          <BaseIcon name="shield" />
         </div>
 
         <div>
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+          <h3 class="text-lg font-bold text-foreground-light dark:text-foreground-dark">
             Alterar Senha
           </h3>
-          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+          <p class="mt-1 text-sm text-foreground-lightSecondary dark:text-foreground-darkSecondary">
             Mantenha sua conta segura com uma senha forte
           </p>
         </div>
@@ -40,7 +41,7 @@ const requirements = [
         <BaseInput
           id="password"
           v-model="password"
-          icon="*"
+          icon="lock"
           label="Senha"
           placeholder="Digite sua senha"
           :right-padding="true"
@@ -48,7 +49,7 @@ const requirements = [
         >
           <template #right>
             <button
-              class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-foreground-lightMuted hover:text-foreground-lightSecondary dark:text-foreground-darkMuted dark:hover:text-foreground-darkSecondary"
               type="button"
               @click="showPassword = !showPassword"
             >
@@ -61,7 +62,7 @@ const requirements = [
           <BaseInput
             id="new-password"
             v-model="newPassword"
-            icon="*"
+            icon="lock"
             label="Nova Senha"
             placeholder="Digite sua nova senha"
             :right-padding="true"
@@ -69,7 +70,7 @@ const requirements = [
           >
             <template #right>
               <button
-                class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-foreground-lightMuted hover:text-foreground-lightSecondary dark:text-foreground-darkMuted dark:hover:text-foreground-darkSecondary"
                 type="button"
                 @click="showNewPassword = !showNewPassword"
               >
@@ -84,8 +85,8 @@ const requirements = [
               :key="requirement"
               class="flex items-center gap-2 text-xs"
             >
-              <span class="h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-700" />
-              <span class="text-gray-500 dark:text-gray-400">
+              <span class="h-2 w-2 rounded-full bg-foreground-lightSubtle dark:bg-foreground-darkSubtle" />
+              <span class="text-foreground-lightMuted dark:text-foreground-darkMuted">
                 {{ requirement }}
               </span>
             </div>

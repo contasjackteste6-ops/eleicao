@@ -13,7 +13,7 @@ defineProps<{
         <h2 class="text-xl font-semibold">
           Canais
         </h2>
-        <p class="text-sm text-neutral-500 dark:text-neutral-400">
+        <p class="text-sm text-foreground-lightSecondary dark:text-foreground-darkSecondary">
           Componentes simples para testar badges e listas.
         </p>
       </div>
@@ -32,7 +32,7 @@ defineProps<{
           <p class="font-medium">
             {{ channel.name }}
           </p>
-          <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          <p class="text-sm text-foreground-lightSecondary dark:text-foreground-darkSecondary">
             {{ channel.description }}
           </p>
         </div>

@@ -8,7 +8,7 @@
         <h1 class="mt-2 text-3xl font-bold">
           Teste rapido do Tailwind
         </h1>
-        <p class="mt-3 max-w-2xl text-sm text-neutral-600 dark:text-neutral-300">
+        <p class="mt-3 max-w-2xl text-sm text-foreground-lightSecondary dark:text-foreground-darkSecondary">
           Uma pagina inicial temporaria para validar cores, espacamentos, bordas, sombras e estados do tema.
         </p>
       </div>
@@ -16,10 +16,10 @@
     </div>
 
     <div class="mt-5 flex flex-wrap gap-3">
-      <button class="min-h-touch rounded-lg bg-primary-500 px-5 text-sm font-semibold text-white shadow-focus transition hover:bg-primary-600">
+      <button class="min-h-touch rounded-lg bg-primary-500 px-5 text-sm font-semibold text-white shadow-soft transition hover:bg-primary-600">
         Nova conversa
       </button>
-      <button class="min-h-touch rounded-lg border border-border bg-surface px-5 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 dark:border-border-dark dark:bg-surface-dark dark:text-neutral-100 dark:hover:bg-surface-dark-muted">
+      <button class="min-h-touch rounded-lg border border-border bg-surface px-5 text-sm font-semibold text-foreground-lightSecondary transition hover:bg-surface-hover dark:border-border-dark dark:bg-surface-dark dark:text-foreground-darkSecondary dark:hover:bg-surface-dark-hover">
         Ver fila
       </button>
     </div>
