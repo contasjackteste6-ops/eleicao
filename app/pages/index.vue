@@ -31,15 +31,9 @@ const tempoRestante = ref({ dias: 0, horas: 0, minutos: 0, segundos: 0, encerrad
 let timerInterval: any = null
 
 async function checkAdminStatus() {
-  if (!user.value?.id) return
   try {
-    const { data } = await supabase
-      .from('administradores')
-      .select('user_id')
-      .eq('user_id', user.value.id)
-      .maybeSingle()
-
-    if (data) {
+    const res = await $fetch<{ isAdmin: boolean }>('/api/auth/is-admin')
+    if (res?.isAdmin) {
       isAdmin.value = true
     }
   } catch (err) {
