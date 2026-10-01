@@ -7,7 +7,7 @@ definePageMeta({
   middleware: 'admin-guard',
 })
 
-const nuevoEmailAdmin = ref('')
+const novoEmailAdmin = ref('')
 const isAdding = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
@@ -17,7 +17,7 @@ const { data: admins, pending, refresh } = useFetch('/api/admin/administradores'
 })
 
 async function adicionarAdmin() {
-  if (!nuevoEmailAdmin.value || !nuevoEmailAdmin.value.includes('@')) {
+  if (!novoEmailAdmin.value || !novoEmailAdmin.value.includes('@')) {
     errorMessage.value = 'Digite um endereço de e-mail válido.'
     return
   }
@@ -33,10 +33,10 @@ async function adicionarAdmin() {
     })
 
     successMessage.value = `Administrador ${novoEmailAdmin.value} adicionado com sucesso! Ao fazer login, ele terá acesso total ao painel.`
-    nuevoEmailAdmin.value = ''
+    novoEmailAdmin.value = ''
     await refresh()
   } catch (err: any) {
-    errorMessage.value = err?.statusMessage || 'Erro ao cadastrar administrador.'
+    errorMessage.value = err?.data?.statusMessage || err?.statusMessage || 'Erro ao cadastrar administrador.'
   } finally {
     isAdding.value = false
   }
@@ -94,7 +94,7 @@ async function removerAdmin(userId: string, email: string) {
       <form class="flex flex-col sm:flex-row items-center gap-3 pt-2" @submit.prevent="adicionarAdmin">
         <div class="relative flex-1 w-full">
           <input
-            v-model="nuevoEmailAdmin"
+            v-model="novoEmailAdmin"
             type="email"
             placeholder="Digite o e-mail do novo administrador..."
             class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm font-medium text-slate-900 focus:bg-white focus:outline-none focus:border-[#003B70]"
@@ -103,7 +103,7 @@ async function removerAdmin(userId: string, email: string) {
 
         <button
           type="submit"
-          :disabled="isAdding || !nuevoEmailAdmin"
+          :disabled="isAdding || !novoEmailAdmin"
           class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#003B70] text-white font-extrabold text-xs shadow-md hover:bg-[#002B54] transition disabled:opacity-50 shrink-0"
         >
           {{ isAdding ? 'Concedendo...' : '+ Conceder Acesso Admin' }}
