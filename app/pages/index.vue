@@ -14,6 +14,7 @@ const supabase = useSupabaseClient()
 const { logout } = useAuth()
 
 const profile = ref<Profile | null>(null)
+const isAdmin = ref(false)
 const isLoggingOut = ref(false)
 const isLoading = ref(true)
 const isSubmittingVoto = ref(false)
@@ -28,6 +29,23 @@ const votoUsuario = ref<Voto | null>(null)
 // Cronômetro de Contagem Regressiva
 const tempoRestante = ref({ dias: 0, horas: 0, minutos: 0, segundos: 0, encerrado: false })
 let timerInterval: any = null
+
+async function checkAdminStatus() {
+  if (!user.value?.id) return
+  try {
+    const { data } = await supabase
+      .from('administradores')
+      .select('user_id')
+      .eq('user_id', user.value.id)
+      .maybeSingle()
+
+    if (data) {
+      isAdmin.value = true
+    }
+  } catch (err) {
+    console.error('Erro ao verificar status admin:', err)
+  }
+}
 
 async function fetchProfile() {
   if (!user.value?.id) return
@@ -141,6 +159,7 @@ async function handleLogout() {
 
 onMounted(() => {
   fetchProfile()
+  checkAdminStatus()
   checarStatusVotacao()
 })
 
@@ -150,24 +169,27 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <main class="relative min-h-screen w-full overflow-y-auto bg-cover bg-center bg-no-repeat flex flex-col justify-between p-3 sm:p-5" style="background-image: url('/voting_room_bg.jpg');">
+  <main
+    class="relative min-h-screen w-full overflow-y-auto bg-cover bg-center bg-no-repeat flex flex-col justify-between p-3 sm:p-5 select-none"
+    style="background-image: url('/voting_room_bg.jpg'); touch-action: pan-y; -webkit-user-select: none; user-select: none;"
+  >
     <!-- Overlay sutil para garantir contraste -->
     <div class="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]" />
 
     <!-- Barra Superior com perfil do eleitor -->
-    <header class="relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between rounded-2xl border border-slate-200 bg-white/95 p-3.5 text-slate-900 shadow-lg backdrop-blur-md">
-      <div class="flex items-center gap-3">
+    <header class="relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-white/95 p-3.5 text-slate-900 shadow-lg backdrop-blur-md">
+      <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
         <div v-if="user?.user_metadata?.avatar_url || profile?.avatar_url" class="h-10 w-10 overflow-hidden rounded-full border border-slate-300 shrink-0">
           <img :src="user?.user_metadata?.avatar_url || profile?.avatar_url || ''" alt="Eleitor" class="h-full w-full object-cover" />
         </div>
         <div v-else class="flex h-10 w-10 items-center justify-center rounded-full bg-[#003B70]/10 text-[#003B70] font-black text-sm shrink-0">
           {{ (user?.email?.[0] || 'E').toUpperCase() }}
         </div>
-        <div>
-          <h1 class="text-sm font-extrabold sm:text-base text-slate-900">
+        <div class="min-w-0">
+          <h1 class="text-xs sm:text-base font-extrabold text-slate-900 truncate">
             Eleitor: {{ profile?.nome || user?.user_metadata?.full_name || user?.email }}
           </h1>
-          <p class="text-xs font-semibold text-slate-500">
+          <p class="text-[11px] sm:text-xs font-semibold text-slate-500 truncate">
             Sessão Eleitoral • Status:
             <span v-if="jaVotou" class="text-emerald-600 font-extrabold">Voto Registrado ✓</span>
             <span v-else class="text-[#003B70] font-bold">Aguardando Voto</span>
@@ -175,26 +197,42 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- BOTÃO DE SAIR SÓ APARECE SE AINDA NÃO VOTOU -->
-      <button
-        v-if="!jaVotou"
-        type="button"
-        :disabled="isLoggingOut"
-        class="flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-xs font-bold text-white hover:bg-red-700 transition active:scale-95 disabled:opacity-50 shadow-sm"
-        @click="handleLogout"
-      >
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-        </svg>
-        <span>{{ isLoggingOut ? 'Saindo...' : 'Sair' }}</span>
-      </button>
+      <div class="flex items-center gap-2 shrink-0">
+        <!-- BOTÃO PAINEL ADMIN (APENAS PARA ADMINISTRADORES) -->
+        <NuxtLink
+          v-if="isAdmin"
+          to="/admin"
+          class="flex items-center gap-1.5 rounded-xl bg-[#003B70] px-3.5 py-2 text-xs font-black text-white hover:bg-[#002850] transition active:scale-95 shadow-md border border-blue-400/30 shrink-0"
+        >
+          <svg class="h-4 w-4 text-[#FFCC00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span class="hidden sm:inline">Painel Admin</span>
+          <span class="sm:hidden">Admin</span>
+        </NuxtLink>
 
-      <!-- SE JÁ VOTOU: ÍCONE DE BLOQUEIO / COMPROVANTE -->
-      <div v-else class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-black shadow-sm">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span>Votação Concluída</span>
+        <!-- BOTÃO DE SAIR SÓ APARECE SE AINDA NÃO VOTOU -->
+        <button
+          v-if="!jaVotou"
+          type="button"
+          :disabled="isLoggingOut"
+          class="flex items-center gap-2 rounded-xl bg-red-600 px-3.5 py-2 text-xs font-bold text-white hover:bg-red-700 transition active:scale-95 disabled:opacity-50 shadow-sm shrink-0"
+          @click="handleLogout"
+        >
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span>{{ isLoggingOut ? 'Saindo...' : 'Sair' }}</span>
+        </button>
+
+        <!-- SE JÁ VOTOU: ÍCONE DE BLOQUEIO / COMPROVANTE -->
+        <div v-else class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-black shadow-sm shrink-0">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Votação Concluída</span>
+        </div>
       </div>
     </header>
 
