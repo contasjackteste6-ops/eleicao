@@ -1,6 +1,6 @@
 import { defineNuxtPlugin } from '#app'
 
-const STORAGE_KEY = 'multiatendimento-theme'
+const STORAGE_KEY = 'eleitoral-theme'
 
 export default defineNuxtPlugin(() => {
   const savedTheme = localStorage.getItem(STORAGE_KEY)

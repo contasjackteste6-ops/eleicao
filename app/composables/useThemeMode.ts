@@ -2,7 +2,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 type ThemeMode = 'light' | 'dark'
 
-const STORAGE_KEY = 'multiatendimento-theme'
+const STORAGE_KEY = 'eleitoral-theme'
 const mode = ref<ThemeMode>('light')
 
 export function useThemeMode() {
