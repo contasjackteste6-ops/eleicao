@@ -284,14 +284,15 @@ onMounted(() => {
       </div>
     </Teleport>
 
-    <!-- Tabela de Eleições com opção de Editar -->
+    <!-- Tabela de Eleições com rolagem horizontal no celular -->
     <div class="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
       <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <h3 class="text-sm font-extrabold text-slate-800">Pleitos Cadastrados</h3>
         <span class="text-xs font-semibold text-slate-400">Total: {{ eleicoes.length }}</span>
       </div>
 
-      <table class="w-full text-left text-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm min-w-[600px]">
         <thead class="bg-slate-50 text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">
           <tr>
             <th class="py-3.5 px-6">Eleição</th>
@@ -367,6 +368,7 @@ onMounted(() => {
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 </template>
