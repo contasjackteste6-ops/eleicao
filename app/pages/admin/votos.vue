@@ -69,6 +69,17 @@ function copiarLinkResultado() {
     copiadoLink.value = false
   }, 2500)
 }
+            async function excluirVoto(votoId: string, voterName: string) {
+  if (!confirm(`Deseja realmente excluir o voto de ${voterName}? Isso permitirá que o eleitor vote novamente.`)) return
+  try {
+    await $fetch(`/api/admin/votos/${votoId}`, {
+      method: 'DELETE',
+    })
+    await refresh()
+  } catch (err: any) {
+    alert(err?.statusMessage || 'Erro ao excluir voto.')
+  }
+}
 </script>
 
 <template>
@@ -266,9 +277,9 @@ function copiarLinkResultado() {
         </span>
       </div>
 
-      <!-- Tabela de Auditoria -->
+      <!-- Tabela de Auditoria com Coluna de Ações para Excluir Voto -->
       <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs">
+        <table class="w-full text-left text-xs min-w-[650px]">
           <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-extrabold uppercase tracking-wider">
             <tr>
               <th class="py-3.5 px-6">Eleitor (Quem Votou)</th>
@@ -276,6 +287,7 @@ function copiarLinkResultado() {
               <th class="py-3.5 px-6">Voto Registrado (Em Quem)</th>
               <th class="py-3.5 px-6">Tipo do Voto</th>
               <th class="py-3.5 px-6">Data / Hora</th>
+              <th class="py-3.5 px-6 text-right">Ações</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
@@ -330,10 +342,21 @@ function copiarLinkResultado() {
               <td class="py-4 px-6 text-slate-500 text-[11px]">
                 {{ new Date(voto.created_at).toLocaleString('pt-BR') }}
               </td>
+
+              <!-- Ação de Excluir Voto para o usuário votar novamente -->
+              <td class="py-4 px-6 text-right">
+                <button
+                  type="button"
+                  class="px-3 py-1.5 rounded-xl bg-red-50 text-red-700 border border-red-200 text-xs font-extrabold hover:bg-red-100 transition"
+                  @click="excluirVoto(voto.id, voto.voter_name)"
+                >
+                  Excluir Voto
+                </button>
+              </td>
             </tr>
 
             <tr v-if="!dadosApuracao?.auditVotos || dadosApuracao.auditVotos.length === 0">
-              <td colspan="5" class="py-12 text-center text-slate-400 font-bold">
+              <td colspan="6" class="py-12 text-center text-slate-400 font-bold">
                 Nenhum voto auditado encontrado.
               </td>
             </tr>
