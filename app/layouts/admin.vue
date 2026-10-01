@@ -56,7 +56,7 @@ watch(() => route.path, () => {
         <!-- Logo e Botão Fechar no Mobile -->
         <div class="flex items-center justify-between py-2">
           <div class="flex justify-center items-center mx-auto lg:mx-0">
-            <img src="/eleicoes2026.png" alt="Eleições 2026" class="h-14 lg:h-16 w-auto object-contain" />
+            <img src="/eleicoes2026.png" alt="Eleições 2026" class="h-20 lg:h-24 w-auto object-contain" />
           </div>
 
           <!-- Botão fechar (visível apenas no mobile) -->
@@ -80,7 +80,7 @@ watch(() => route.path, () => {
             :class="[
               'flex items-center gap-4 px-4 py-3 rounded-2xl text-base transition-all duration-150',
               isActive(item.path)
-                ? 'border-2 border-slate-900 bg-white text-[#003B70] font-black shadow-sm'
+                ? 'bg-[#003B70] text-white font-black shadow-md'
                 : 'text-slate-600 font-bold hover:text-slate-900 hover:bg-slate-50'
             ]"
             @click="closeSidebar"
