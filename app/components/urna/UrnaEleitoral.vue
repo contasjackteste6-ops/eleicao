@@ -16,6 +16,15 @@ const numeroDigitado = ref('')
 const isBranco = ref(false)
 const mensagemErroUrna = ref('')
 
+const maxDigitsLimit = computed(() => {
+  if (props.numeroMax) return props.numeroMax
+  if (props.candidatos && props.candidatos.length > 0) {
+    const maxLen = Math.max(...props.candidatos.map((c) => (c.numero || '').length))
+    return Math.max(maxLen, 4)
+  }
+  return 4
+})
+
 const candidatoAtual = computed(() => {
   if (isBranco.value || !numeroDigitado.value) return null
   return props.candidatos?.find((c) => c.numero === numeroDigitado.value) || null
@@ -23,8 +32,8 @@ const candidatoAtual = computed(() => {
 
 const isNulo = computed(() => {
   if (isBranco.value) return false
-  const maxDigits = props.numeroMax || 2
-  return numeroDigitado.value.length === maxDigits && !candidatoAtual.value
+  if (!numeroDigitado.value) return false
+  return numeroDigitado.value.length === maxDigitsLimit.value && !candidatoAtual.value
 })
 
 function tocarSomTecla() {
@@ -90,7 +99,7 @@ function tocarSomErro() {
 function pressionarTeclado(tecla: string) {
   mensagemErroUrna.value = ''
   if (isBranco.value) return
-  if (numeroDigitado.value.length < (props.numeroMax || 2)) {
+  if (numeroDigitado.value.length < maxDigitsLimit.value) {
     numeroDigitado.value += tecla
     tocarSomTecla()
   }
@@ -170,11 +179,11 @@ function clicarConfirma() {
             <!-- Dígitos: Centralizado no Mobile, Alinhado à Esquerda no PC -->
             <div class="flex flex-col items-center sm:items-start">
               <p class="text-xs font-black uppercase tracking-wider text-slate-600 mb-2">Número:</p>
-              <div class="flex items-center gap-2 sm:gap-3 flex-nowrap">
+              <div class="flex items-center gap-1.5 sm:gap-2.5 flex-nowrap">
                 <div
-                  v-for="i in (numeroMax || 2)"
+                  v-for="i in maxDigitsLimit"
                   :key="i"
-                  class="flex h-16 w-14 sm:h-24 sm:w-20 shrink-0 items-center justify-center rounded-xl border-3 border-slate-700 bg-white text-3xl sm:text-5xl font-black text-slate-900 shadow-md transition-all duration-150"
+                  class="flex h-12 w-10 sm:h-20 sm:w-16 shrink-0 items-center justify-center rounded-xl border-2 sm:border-3 border-slate-700 bg-white text-2xl sm:text-4xl font-black text-slate-900 shadow-md transition-all duration-150"
                   :class="{ 'border-[#003B70] ring-2 ring-[#003B70]/20': numeroDigitado[i - 1] }"
                 >
                   {{ numeroDigitado[i - 1] || '' }}
