@@ -32,6 +32,26 @@ let timerInterval: any = null
 
 async function checkAdminStatus() {
   try {
+    let userId = user.value?.id
+    if (!userId) {
+      const { data } = await supabase.auth.getSession()
+      userId = data?.session?.user?.id
+    }
+    if (!userId) return
+
+    // 1. Tentar verificação direta via Supabase Client
+    const { data: adminData } = await supabase
+      .from('administradores')
+      .select('user_id')
+      .eq('user_id', userId)
+      .maybeSingle()
+
+    if (adminData) {
+      isAdmin.value = true
+      return
+    }
+
+    // 2. Fallback via API server
     const res = await $fetch<{ isAdmin: boolean }>('/api/auth/is-admin')
     if (res?.isAdmin) {
       isAdmin.value = true
