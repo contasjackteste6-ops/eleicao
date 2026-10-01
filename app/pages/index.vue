@@ -313,7 +313,7 @@ onUnmounted(() => {
         <!-- URNA ELEITORAL REPOSICIONADA MAIS ACIMA -->
         <UrnaEleitoral
           cargo="PRESIDENTE"
-          :numero-max="2"
+          :numero-max="4"
           :candidatos="candidatos"
           @confirmar="handleConfirmarVoto"
         />
