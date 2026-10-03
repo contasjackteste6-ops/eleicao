@@ -30,6 +30,18 @@ const votoUsuario = ref<Voto | null>(null)
 const tempoRestante = ref({ dias: 0, horas: 0, minutos: 0, segundos: 0, encerrado: false })
 let timerInterval: any = null
 
+const isEleicaoEncerrada = computed(() => {
+  if (!eleicaoAtiva.value) return false
+  if (eleicaoAtiva.value.status === 'finalizada' || eleicaoAtiva.value.status === 'encerrada') return true
+  if (tempoRestante.value.encerrado) return true
+  if (eleicaoAtiva.value.data_fim) {
+    const fim = new Date(eleicaoAtiva.value.data_fim).getTime()
+    const agora = new Date().getTime()
+    if (agora >= fim) return true
+  }
+  return false
+})
+
 async function checkAdminStatus() {
   try {
     let userId = user.value?.id
@@ -206,6 +218,7 @@ onUnmounted(() => {
           <p class="text-[11px] sm:text-xs font-semibold text-slate-500 truncate">
             Sessão Eleitoral • Status:
             <span v-if="jaVotou" class="text-emerald-600 font-extrabold">Voto Registrado ✓</span>
+            <span v-else-if="isEleicaoEncerrada" class="text-amber-600 font-extrabold">Votação Encerrada 🔒</span>
             <span v-else class="text-[#003B70] font-bold">Aguardando Voto</span>
           </p>
         </div>
@@ -318,7 +331,63 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- TELA 2: SE AINDA NÃO VOTOU -> EXIBIR URNA + CARDS DOS CANDIDATOS ABAIXO -->
+      <!-- TELA 2: SE A ELEIÇÃO FOI ENCERRADA E O USUÁRIO NÃO VOTOU -> EXIBIR TELA DE ELEIÇÃO FINALIZADA -->
+      <div v-else-if="isEleicaoEncerrada" class="w-full max-w-2xl rounded-3xl border-2 border-slate-200 bg-white/95 p-8 sm:p-10 shadow-2xl backdrop-blur-xl text-center space-y-6 animate-fade-in my-auto">
+        <!-- Ícone de Eleição Encerrada -->
+        <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-amber-100 border-4 border-amber-200 text-amber-600 shadow-md">
+          <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+
+        <div>
+          <span class="inline-block px-3.5 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-black uppercase tracking-widest mb-2">
+            Votação Encerrada
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            Esta Eleição foi Finalizada!
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 font-medium mt-1 max-w-md mx-auto">
+            O período de votação para este pleito foi encerrado e não é mais possível registrar novos votos.
+          </p>
+        </div>
+
+        <!-- Card Informativo -->
+        <div class="rounded-2xl border-2 border-slate-200 bg-slate-900 p-6 text-white shadow-inner space-y-3">
+          <p class="text-xs font-extrabold uppercase tracking-widest text-[#FFCC00]">
+            Status do Pleito:
+          </p>
+          <p class="text-base sm:text-lg font-black text-amber-400 uppercase tracking-wider">
+            Votação Oficialmente Encerrada
+          </p>
+          <p v-if="eleicaoAtiva?.resultado_publico_ativo" class="text-xs text-slate-300">
+            Os resultados oficiais já estão disponíveis para consulta pública.
+          </p>
+          <p v-else class="text-xs text-slate-400">
+            A comissão eleitoral está apurando os votos. Os resultados serão divulgados em breve.
+          </p>
+        </div>
+
+        <!-- Botão para ver Resultado se ativo -->
+        <div v-if="eleicaoAtiva?.resultado_publico_ativo" class="pt-2">
+          <NuxtLink
+            to="/resultado"
+            class="inline-flex items-center gap-2 rounded-2xl bg-[#003B70] px-6 py-3.5 text-xs font-black text-white hover:bg-[#002850] transition active:scale-95 shadow-lg"
+          >
+            <svg class="h-4 w-4 text-[#FFCC00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            <span>Ver Resultado da Eleição</span>
+          </NuxtLink>
+        </div>
+
+        <!-- Detalhes do Pleito -->
+        <div v-if="eleicaoAtiva" class="text-xs font-semibold text-slate-500 pt-2 border-t border-slate-100">
+          Eleição: <strong class="text-slate-800">{{ eleicaoAtiva.titulo }}</strong>
+        </div>
+      </div>
+
+      <!-- TELA 3: SE AINDA NÃO VOTOU E A ELEIÇÃO ESTÁ ATIVA -> EXIBIR URNA -->
       <div v-else class="w-full flex justify-center items-center flex-col space-y-6">
         <div v-if="errorMessage" class="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs font-bold max-w-xl text-center">
           {{ errorMessage }}

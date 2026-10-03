@@ -22,11 +22,25 @@ export default defineEventHandler(async (event) => {
 
   const { eleicao_id, candidato_numero, tipo_voto } = body
 
-  if (!eleicao_id) {
-    throw createError({ statusCode: 400, statusMessage: 'Eleição não informada.' })
+  // 1. Buscar eleição para validar status e data de encerramento
+  const { data: eleicao } = await client
+    .from('eleicoes')
+    .select('*')
+    .eq('id', eleicao_id)
+    .single()
+
+  if (!eleicao) {
+    throw createError({ statusCode: 404, statusMessage: 'Eleição não encontrada.' })
   }
 
-  // 1. Verificar se o usuário já votou nesta eleição
+  const agora = new Date().getTime()
+  const dataFim = eleicao.data_fim ? new Date(eleicao.data_fim).getTime() : null
+
+  if (eleicao.status === 'finalizada' || eleicao.status === 'encerrada' || (dataFim && agora >= dataFim)) {
+    throw createError({ statusCode: 400, statusMessage: 'Votação encerrada! Esta eleição não aceita mais novos votos.' })
+  }
+
+  // 2. Verificar se o usuário já votou nesta eleição
   const { data: votosExistentes } = await client
     .from('votos')
     .select('id')
