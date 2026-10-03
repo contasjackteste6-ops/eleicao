@@ -22,13 +22,41 @@ const isLoading = ref(true)
 const isSaving = ref(false)
 const errorMessage = ref('')
 
+function formatForDatetimeInput(dateInput?: string | Date | null): string {
+  if (!dateInput) return ''
+  const d = new Date(dateInput)
+  if (isNaN(d.getTime())) return ''
+
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  const hours = String(d.getHours()).padStart(2, '0')
+  const minutes = String(d.getMinutes()).padStart(2, '0')
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
+function formatDateLocal(dateInput?: string | null): string {
+  if (!dateInput) return '-'
+  const d = new Date(dateInput)
+  if (isNaN(d.getTime())) return '-'
+  return d.toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
+}
+
 function setDatasPadrao() {
   const agora = new Date()
   const daqui7dias = new Date()
   daqui7dias.setDate(daqui7dias.getDate() + 7)
 
-  dataInicio.value = agora.toISOString().slice(0, 16)
-  dataFim.value = daqui7dias.toISOString().slice(0, 16)
+  dataInicio.value = formatForDatetimeInput(agora)
+  dataFim.value = formatForDatetimeInput(daqui7dias)
 }
 
 function abrirModalCriar() {
@@ -47,12 +75,8 @@ function abrirModalEditar(eleicao: Eleicao) {
   novaDescricao.value = eleicao.descricao || ''
   novoStatus.value = eleicao.status
 
-  if (eleicao.data_inicio) {
-    dataInicio.value = new Date(eleicao.data_inicio).toISOString().slice(0, 16)
-  }
-  if (eleicao.data_fim) {
-    dataFim.value = new Date(eleicao.data_fim).toISOString().slice(0, 16)
-  }
+  dataInicio.value = formatForDatetimeInput(eleicao.data_inicio)
+  dataFim.value = formatForDatetimeInput(eleicao.data_fim)
 
   errorMessage.value = ''
   showModal.value = true
@@ -308,8 +332,8 @@ onMounted(() => {
               <span v-if="e.descricao" class="block text-xs font-normal text-slate-400">{{ e.descricao }}</span>
             </td>
             <td class="py-4 px-6 text-xs text-slate-500">
-              <div>Início: {{ new Date(e.data_inicio).toLocaleString('pt-BR') }}</div>
-              <div>Fim: {{ new Date(e.data_fim).toLocaleString('pt-BR') }}</div>
+              <div>Início: {{ formatDateLocal(e.data_inicio) }}</div>
+              <div>Fim: {{ formatDateLocal(e.data_fim) }}</div>
             </td>
             <td class="py-4 px-6">
               <span
